@@ -1,0 +1,12 @@
+.collapsed {
+    display: none;  
+}
+.not-collapsed {
+    display: block;  
+}
+
+
+div.collapse-option-container {
+    float: right important;
+    padding: 8px;
+}
