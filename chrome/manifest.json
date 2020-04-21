@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "APEX Search Page Collapsible",
+  "version": "0.1",
+
+  "content_scripts": [{
+    "run_at": "document_end",
+    "matches": ["*://*/*"],
+    "css": ["collapsible.css"],
+    "js": ["jquery-3.2.1.min.js", "collapsible.js"]
+  }],
+
+  "permissions": ["activeTab"]
+}
