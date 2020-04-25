@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "APEX Search Page Collapsible",
+  "version": "0.1",
+
+  "content_scripts": [{
+    "run_at": "document_end",
+    "matches": [ "*://*/*/f?p=4000:*", "*://*/*/f?p=4500:*", "*://*/*/*/wwv_flow.accept", "*://*/*/wwv_flow.accept" ],
+    "css": ["collapsible.css"],
+    "js": ["jquery-3.2.1.min.js", "collapsible.js"]
+  }],
+
+  "description": "Make the results of the Search Page collapsible and browse them easily.",
+  "permissions": ["activeTab"]
+}
