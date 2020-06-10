@@ -30,38 +30,41 @@ function onChangeResultList(){
     let config = { childList: true, subtree: true };
     // Callback function to execute when mutations are observed
     let callback = function(mutationsList, observer){
-        let mutation = mutationsList[0];
-    
-        if (
-            mutationsList.length == 1 
-            && mutation.type == "childList"
-            && mutation.target.className == "a-AlertMessages-list"
-            && mutation.target.tagName == "UL"
-            && mutation.addedNodes.length == 1
-            && mutation.removedNodes.length == 1
-            && mutation.addedNodes[0].tagName == "LI"
-            && mutation.addedNodes[0].className == "a-AlertMessages-item"
-            && mutation.removedNodes[0].tagName == "LI"
-            && mutation.removedNodes[0].className == "a-AlertMessages-item"
+
+        for(mutation of mutationsList){
+
+            // console.log("onChangeResultList.callback");
+            
+            if (
+                mutation.type == "childList"
+                && mutation.target.className == "a-AlertMessages-list"
+                && mutation.target.tagName == "UL"
+                && mutation.addedNodes.length == 1
+                && mutation.addedNodes[0].tagName == "LI"
+                && mutation.addedNodes[0].className == "a-AlertMessages-item"
+                && mutation.removedNodes.length == 1
+                && mutation.removedNodes[0].tagName == "LI"
+                && mutation.removedNodes[0].className == "a-AlertMessages-item"
             )
-        {
-            // console.log("require setCollapseSingleNode");
-            let removedCollapsibleStatus = mutation.removedNodes[0].childNodes[1].childNodes[1].innerText;
-            // console.log("removedCollapsibleStatus:" + removedCollapsibleStatus);
-            let collapsibleStatus = (removedCollapsibleStatus == '[-]' ? 'not-collapsed' : 'collapsed');
-            
-            let aAttr = mutation.addedNodes[0].attributes;
-            let aAttrTxt = '{';
-            
-            for(i=0; i<aAttr.length; i++){
-                // console.log(aAttr.item(i).name + ':' + aAttr.item(i).value);
-                aAttrTxt += '"' + aAttr.item(i).name + '":"' + aAttr.item(i).value + '"' + ((i < aAttr.length-1) ? ',' : '');
+            {
+                // console.log("require setCollapseSingleNode");
+                let removedCollapsibleStatus = mutation.removedNodes[0].childNodes[1].childNodes[1].innerText;
+                // console.log("removedCollapsibleStatus:" + removedCollapsibleStatus);
+                let collapsibleStatus = (removedCollapsibleStatus == '[-]' ? 'not-collapsed' : 'collapsed');
+                
+                let aAttr = mutation.addedNodes[0].attributes;
+                let aAttrTxt = '{';
+                
+                for(i=0; i<aAttr.length; i++){
+                    // console.log(aAttr.item(i).name + ':' + aAttr.item(i).value);
+                    aAttrTxt += '"' + aAttr.item(i).name + '":"' + aAttr.item(i).value + '"' + ((i < aAttr.length-1) ? ',' : '');
+                }
+                
+                aAttrTxt += '}';
+                let jsonAttr = JSON.parse(aAttrTxt);
+                // console.log('jsonAttr:' + JSON.stringify(jsonAttr));
+                setCollapseSingleNode(jsonAttr, collapsibleStatus);
             }
-            
-            aAttrTxt += '}';
-            let jsonAttr = JSON.parse(aAttrTxt);
-            // console.log('jsonAttr:' + JSON.stringify(jsonAttr));
-            setCollapseSingleNode(jsonAttr, collapsibleStatus);
         }
     }
     // Create an observer instance linked to the callback function
@@ -91,7 +94,7 @@ function setCollapseSingleNode(jsonNode, collapsibleStatus){
         classCollapsed = 'collapsed';
     } else {
         linkText = '[-]';
-        classCollapsed = 'not-collapsed"';
+        classCollapsed = 'not-collapsed';
     }
     
     $("div#search-container li.a-AlertMessages-item" + jqFilter).each( function (i){
@@ -111,7 +114,7 @@ function setCollapseSingleNode(jsonNode, collapsibleStatus){
         );
     });
             
-    $("a.collapsible").bind(
+    $("div#search-container li.a-AlertMessages-item" + jqFilter + " a.collapsible").bind(
         "click",
         function (){
             doCollapse(this);
@@ -205,7 +208,7 @@ function setAllCollpseOption(){
         $("div.a-Toolbar-pageColumn--searchOptions div.a-Form-fieldContainer:last-child")
             .after(
                 '<div><a href="#" class="collapse-option collapse-all">[Collapse all]</a></div>'
-                + '<div><a href="#" class="collapse-option collapse-none">[Collapse none]</a></div>'
+                + '<div><a href="#" class="collapse-option collapse-none">[Expand all]</a></div>'
             );
     }
 
@@ -233,13 +236,13 @@ function doCollapseOption(e){
     // console.log("doCollapseOption");
     
     if ($(e).hasClass("collapse-all")){
-        console.log("has collapse-all");
+        // console.log("has collapse-all");
         newText = "[+]";
         class2add = "collapsed";
         class2remove = "not-collapsed";
 
     } else if ($(e).hasClass("collapse-none")){
-        console.log("has collapse-none");
+        // console.log("has collapse-none");
         newText = "[-]";
         class2add = "not-collapsed";
         class2remove = "collapsed";
