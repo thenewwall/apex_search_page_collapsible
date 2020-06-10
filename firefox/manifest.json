@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "APEX Search Page Collapsible",
-  "version": "0.1",
+  "version": "1.0",
 
   "content_scripts": [{
     "run_at": "document_end",
